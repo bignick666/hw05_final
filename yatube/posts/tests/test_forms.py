@@ -14,7 +14,6 @@ class PostCreateFormTests(TestCase):
         super().setUpClass()
         cls.user = User.objects.create_user(username='Geek')
 
-
     def setUp(self):
         self.authorized_client = Client()
         self.guest_client = Client()
