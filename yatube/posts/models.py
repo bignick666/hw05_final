@@ -2,8 +2,6 @@ from django.db import models
 
 from django.contrib.auth import get_user_model
 
-from core.models import CreateModel
-
 User = get_user_model()
 
 
