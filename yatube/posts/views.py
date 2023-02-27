@@ -27,6 +27,7 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
+    # как проверить, что пользователь не в своем профиле?
     context = {
         'author': author,
         'following': request.user.is_authenticated and
@@ -41,7 +42,8 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    author_posts_count = post.author.post.all().count()
+    author_posts_count =\
+        Post.objects.filter(author=post.author).count()
     form = CommentForm(request.POST or None)
     return render(request, 'posts/post_detail.html', {
         'post': post,
@@ -74,7 +76,6 @@ def post_edit(request, post_id):
         instance=post,
     )
     if form.is_valid():
-        request.user != post.author
         post.save()
         return redirect("posts:post_detail", post_id)
     context = {
