@@ -27,8 +27,9 @@
    {% endif %}
 </div>
 
-        <article>
+
           {% for post in page_obj %}
+          <article>
           <ul>
             <li>
               Автор: {{ author.username }}
@@ -42,7 +43,7 @@
             <img class="card-img my-2" src="{{ im.url }}">
           {% endthumbnail %}
           <p>
-          {{post.text}}
+          {{post.text|linebreaks}}
           </p>
           <a href="{% url 'app_posts:post_detail' post.id %}">подробная информация </a>
         </article>
@@ -54,7 +55,6 @@
           {% endif %}
         </p>
         <hr>
-        <!-- Остальные посты. после последнего нет черты -->
         {% endfor %}
         {% include 'includes/paginator.html' %}
       </div>

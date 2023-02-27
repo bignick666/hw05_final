@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from posts.models import Post, Group, User
+from posts.models import Post, Group, User, Comment
 
 
 class PostModelTest(TestCase):
@@ -16,6 +16,11 @@ class PostModelTest(TestCase):
         cls.post = Post.objects.create(
             author=cls.user,
             text='Тестовый постТестовый постТестовый пост',
+        )
+        cls.comment = Comment.objects.create(
+            post=cls.post,
+            author=cls.user,
+            text='Новый комментарий'
         )
 
     def test_models_post_have_correct_object_name(self):
@@ -58,3 +63,25 @@ class PostModelTest(TestCase):
                 self.assertEqual(
                     post._meta.get_field(value).verbose_name,
                     expected)
+
+    def test_models_comment_have_correct_object_name(self):
+        """Тестируем, что у комментария корректный __str__"""
+        comment = PostModelTest.comment
+        expected_name = comment.text[:15]
+        self.assertEqual(expected_name, str(comment))
+
+    def test_models_comment_verbose_names(self):
+        """Тестируем корректность verbose_name поста"""
+        comment = PostModelTest.comment
+        field_verboses = {
+            'post': 'Пост',
+            'created': 'Дата создания',
+            'author': 'Автор',
+            'text': 'Тело коммента'
+        }
+        for value, expected in field_verboses.items():
+            with self.subTest(value=value):
+                self.assertEqual(
+                    comment._meta.get_field(value).verbose_name,
+                    expected)
+

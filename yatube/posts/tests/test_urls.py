@@ -14,19 +14,20 @@ class StaticURLTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create_user(username='Geek')
+        cls.post = Post.objects.create(
+            author=cls.user,
+            text='Тестовый постик'
+        )
+        cls.group = Group.objects.create(
+            title='Тестовая группа',
+            slug='test-slug',
+        )
 
     def setUp(self):
         self.authorized_client = Client()
         self.guest_client = Client()
         self.authorized_client.force_login(self.user)
-        self.post = Post.objects.create(
-            author=self.user,
-            text='Тестовый постик'
-        )
-        self.group = Group.objects.create(
-            title='Тестовая группа',
-            slug='test-slug',
-        )
+
 
     def test_homepage(self):
         response = self.guest_client.get(reverse(INDEX_URL))
