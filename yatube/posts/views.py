@@ -27,15 +27,13 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    following = False
-    if request.user.is_authenticated:
-        following = Follow.objects.filter(
-            user=request.user,
-            author=author
-        ).exists()
     context = {
         'author': author,
-        'following': following
+        'following': request.user.is_authenticated and
+                     Follow.objects.filter(
+                         user=request.user,
+                         author=author
+                     ).exists()
     }
     context.update(get_pag(author.post.all(), request))
     return render(request, 'posts/profile.html', context)
@@ -43,14 +41,12 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+    author_posts_count = post.author.post.all().count()
     form = CommentForm(request.POST or None)
-    comment = Comment.objects.filter(post=post)
-    author_posts_count = Post.objects.filter(author=post.author)
     return render(request, 'posts/post_detail.html', {
         'post': post,
         'author_posts_count': author_posts_count,
         'form': form,
-        'comments': comment
     })
 
 
@@ -70,25 +66,23 @@ def post_create(request):
 @login_required
 def post_edit(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if post.author == request.user:
-        if request.method == 'POST':
-            form = PostForm(request.POST,
-                            files=request.FILES,
-                            instance=post)
-            if form.is_valid():
-                form.save()
-                return redirect('posts:post_detail',
-                                post_id=post_id
-                                )
-            else:
-                raise ValueError
-        else:
-            form = PostForm(instance=post)
-            return render(request,
-                          'posts/create.html',
-                          {'form': form, 'is_edit': True})
-    else:
-        return redirect('posts:post_detail', post_id=post_id)
+    if post.author != request.user:
+        return redirect("posts:post_detail", post_id=post_id)
+    form = PostForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=post,
+    )
+    if form.is_valid():
+        request.user != post.author
+        post.save()
+        return redirect("posts:post_detail", post_id)
+    context = {
+        "post": post,
+        "form": form,
+        "is_edit": True,
+    }
+    return render(request, 'posts/create.html', context)
 
 
 @login_required
