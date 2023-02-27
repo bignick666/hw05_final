@@ -18,7 +18,7 @@ TEST_POSTS_ALL = 13
 TEST_POSTS_SECOND_PAGE = TEST_POSTS_ALL - POSTS_PER_PAGE
 
 
-class StaticURLTests(TestCase):
+class ViewsTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
