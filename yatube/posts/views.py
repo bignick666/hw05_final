@@ -31,11 +31,10 @@ def profile(request, username):
     # может в шаблоне лучше сделать такую проверку?
     context = {
         'author': author,
-        'following': request.user.is_authenticated and
-                     Follow.objects.filter(
-                         user=request.user,
-                         author=author
-                     ).exists()
+        'following': request.user.is_authenticated
+                     and Follow.objects.filter(
+            user=request.user,
+            author=author).exists()
     }
     context.update(get_pag(author.post.all(), request))
     return render(request, 'posts/profile.html', context)
@@ -43,7 +42,7 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    author_posts_count =\
+    author_posts_count = \
         Post.objects.filter(author=post.author).count()
     form = CommentForm(request.POST or None)
     return render(request, 'posts/post_detail.html', {
