@@ -2,11 +2,12 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from ..models import Group, Post, User
-from posts.tests.constants import PROFILE_URL,\
-    INDEX_URL, CREATE_URL,\
-    GROUPS_URL, DETAIL_URL, EDIT_URL, UNEXPECTED_PAGE,\
-    PROFILE_TEMPLATE, INDEX_TEMPLATE,\
-    CREATE_TEMPLATE, GROUPS_TEMPLATE, DETAIL_TEMPLATE
+from posts.tests.constants import PROFILE_URL, \
+    INDEX_URL, CREATE_URL, \
+    GROUPS_URL, DETAIL_URL, EDIT_URL, UNEXPECTED_PAGE, \
+    PROFILE_TEMPLATE, INDEX_TEMPLATE, \
+    CREATE_TEMPLATE, GROUPS_TEMPLATE, DETAIL_TEMPLATE, \
+    ADD_COMMENT_URL, FOLLOW_URL_INDEX
 
 
 class StaticURLTests(TestCase):
@@ -27,7 +28,6 @@ class StaticURLTests(TestCase):
         self.authorized_client = Client()
         self.guest_client = Client()
         self.authorized_client.force_login(self.user)
-
 
     def test_homepage(self):
         response = self.guest_client.get(reverse(INDEX_URL))
@@ -56,6 +56,18 @@ class StaticURLTests(TestCase):
             reverse(EDIT_URL, kwargs={'post_id': self.post.id})
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_add_comment(self):
+        response = self.authorized_client.get(
+            reverse(ADD_COMMENT_URL,
+                    kwargs={'post_id': self.post.id}))
+        self.assertEqual(response.status_code, 302)
+
+    def test_follow(self):
+        response = self.authorized_client.get(
+            reverse(FOLLOW_URL_INDEX))
+        self.assertEqual(response.status_code, 200)
+
 
     def test_createpage(self):
         response = self.authorized_client.get(reverse(CREATE_URL))

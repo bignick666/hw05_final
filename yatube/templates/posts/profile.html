@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load thumbnail %}
-{% block title %}Все посты пользователя {{ profile.username }}{% endblock %}
+{% block title %}Все посты пользователя {{ author.username }}{% endblock %}
   {% include 'includes/header.html' %}
     <main>
       {% block content %}
@@ -25,24 +25,7 @@
    {% endif %}
 </div>
           {% for post in page_obj %}
-          <article>
-          <ul>
-            <li>
-              Автор: {{ author.username }}
-              <a href="<!-- -->">все посты пользователя</a>
-            </li>
-            <li>
-              Дата публикации: {{ post.pub_date|date:"d E Y" }}
-            </li>
-          </ul>
-          {% thumbnail post.image "760x259" crop="center" upscale=True as im %}
-            <img class="card-img my-2" src="{{ im.url }}">
-          {% endthumbnail %}
-          <p>
-          {{post.text|linebreaks}}
-          </p>
-          <a href="{% url 'app_posts:post_detail' post.id %}">подробная информация </a>
-        </article>
+          {% include 'posts/includes/post_list.html' %}
         <p>
           {% if post.group %}
         <a href="{% url 'app_posts:groups' post.group.slug %}">все записи группы</a>

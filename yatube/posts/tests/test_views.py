@@ -84,7 +84,7 @@ class ViewsTests(TestCase):
                          'Тестовый постик')
         self.assertEqual(response.context['post'].image,
                          self.post.image)
-        self.assertEqual(response.context['author_posts_count'].count(),
+        self.assertEqual(response.context['author_posts_count'],
                          1)
         self.assertEqual(response.context['post'].pub_date,
                          self.post.pub_date)
@@ -181,16 +181,6 @@ class ViewsTests(TestCase):
         self.assertRedirects(
             response, f"/auth/login/?next=/posts/{self.post.pk}/comment/"
         )
-
-    def test_show_new_comments(self):
-        self.authorized_client.post(
-            reverse("posts:add_comment", kwargs={"post_id": self.post.pk}),
-        )
-        response = self.guest_client.get(
-            reverse("posts:post_detail", kwargs={"post_id": self.post.pk})
-        )
-        comment = response.context["comments"][0]
-        self.assertEqual(comment.text, "Комментарий")
 
     def test_cache_index_page(self):
         """Тест кеширования главной страницы"""

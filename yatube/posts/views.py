@@ -28,6 +28,7 @@ def group_posts(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     # как проверить, что пользователь не в своем профиле?
+    # может в шаблоне лучше сделать такую проверку?
     context = {
         'author': author,
         'following': request.user.is_authenticated and
@@ -113,12 +114,9 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
-    if (
-            author != request.user
-            and not Follow.objects.filter(user=request.user,
-                                          author=author).exists()
-    ):
-        Follow.objects.create(user=request.user, author=author)
+    if author != request.user:
+        Follow.objects.get_or_create(user=request.user,
+                                     author=author)
         return redirect('posts:profile', username)
     return redirect('posts:profile', username)
 
@@ -126,5 +124,6 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
+    # neponyatno
     Follow.objects.filter(user=request.user, author=author).delete()
     return redirect("posts:profile", username)
