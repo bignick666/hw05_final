@@ -2,7 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from posts.models import Post, Group, User, Comment
+from posts.models import Post, Group, User
 
 from posts.tests.constants import PROFILE_URL,\
     CREATE_URL, EDIT_URL, SMALL_GIF, ADD_COMMENT_URL
@@ -100,4 +100,3 @@ class PostCreateFormTests(TestCase):
         )
         post.refresh_from_db()
         self.assertEqual(post.comments.first().text, form_data['text'])
-
