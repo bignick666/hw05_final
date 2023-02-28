@@ -84,4 +84,3 @@ class PostModelTest(TestCase):
                 self.assertEqual(
                     comment._meta.get_field(value).verbose_name,
                     expected)
-

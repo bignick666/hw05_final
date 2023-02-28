@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, \
 
 from django.contrib.auth.decorators import login_required
 
-from .models import Group, Post, User, Comment, Follow
+from .models import Group, Post, User, Follow
 
 from .forms import PostForm, CommentForm
 from .utils import get_pag

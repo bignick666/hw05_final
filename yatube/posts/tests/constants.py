@@ -6,7 +6,7 @@ GROUPS_URL = 'posts:groups'
 DETAIL_URL = 'posts:post_detail'
 FOLLOW_URL_INDEX = 'posts:follow_index'
 ADD_COMMENT_URL = 'posts:add_comment'
-UNFOLLOW_URL = 'posts:'
+UNFOLLOW_URL = 'posts:profile_unfollow'
 
 PROFILE_TEMPLATE = 'posts/profile.html'
 CREATE_TEMPLATE = 'posts/create.html'

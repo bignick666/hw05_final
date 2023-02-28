@@ -68,7 +68,6 @@ class StaticURLTests(TestCase):
             reverse(FOLLOW_URL_INDEX))
         self.assertEqual(response.status_code, 200)
 
-
     def test_createpage(self):
         response = self.authorized_client.get(reverse(CREATE_URL))
         self.assertEqual(response.status_code, 200)

@@ -5,7 +5,7 @@ from django.urls import reverse
 from posts.models import Post, Group, User, Comment
 
 from posts.tests.constants import PROFILE_URL,\
-    CREATE_URL, EDIT_URL, SMALL_GIF
+    CREATE_URL, EDIT_URL, SMALL_GIF, ADD_COMMENT_URL
 
 
 class PostCreateFormTests(TestCase):
@@ -27,7 +27,6 @@ class PostCreateFormTests(TestCase):
         self.authorized_client = Client()
         self.guest_client = Client()
         self.authorized_client.force_login(self.user)
-
 
     def test_post_create(self):
         """Тест формы создания поста"""
@@ -82,3 +81,23 @@ class PostCreateFormTests(TestCase):
         post.refresh_from_db()
         self.assertEqual(post.text, form_data['text'])
         self.assertEqual(post.group.pk, form_data['group'])
+
+    def test_add_comment(self):
+        post = Post.objects.create(
+            author=self.user,
+            text='testovii post',
+            group=self.group
+        )
+        form_data = {
+            'text': 'Comment123'
+        }
+        url = reverse(ADD_COMMENT_URL,
+                      kwargs={'post_id': post.id})
+        self.response = self.authorized_client.post(
+            url,
+            data=form_data,
+            follow=True
+        )
+        post.refresh_from_db()
+        self.assertEqual(post.comments.first().text, form_data['text'])
+
