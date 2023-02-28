@@ -31,8 +31,9 @@ def profile(request, username):
     # может в шаблоне лучше сделать такую проверку?
     context = {
         'author': author,
-        'following': request.user.is_authenticated
-                     and Follow.objects.filter(
+        'following':
+        request.user.is_authenticated
+        and Follow.objects.filter(
             user=request.user,
             author=author).exists()
     }
