@@ -7,10 +7,7 @@ from posts.models import Post, Group, User, Comment,\
 from posts.utils import POSTS_PER_PAGE
 from posts.tests.constants import PROFILE_URL, \
     INDEX_URL, CREATE_URL, \
-    GROUPS_URL, DETAIL_URL, EDIT_URL, \
-    PROFILE_TEMPLATE, INDEX_TEMPLATE, \
-    CREATE_TEMPLATE, GROUPS_TEMPLATE, DETAIL_TEMPLATE,\
-    FOLLOW_URL_INDEX
+    GROUPS_URL, DETAIL_URL, EDIT_URL, FOLLOW_URL_INDEX
 
 from posts.forms import PostForm
 
