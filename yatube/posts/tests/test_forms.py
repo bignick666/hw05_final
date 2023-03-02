@@ -100,3 +100,4 @@ class PostCreateFormTests(TestCase):
         )
         post.refresh_from_db()
         self.assertEqual(post.comments.first().text, form_data['text'])
+        self.assertEqual(post.comments.first().author, self.user)

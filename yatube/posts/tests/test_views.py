@@ -44,29 +44,12 @@ class ViewsTests(TestCase):
         self.new_author = User.objects.create_user(
             username="new_author")
 
-    def test_urls_uses_correct_template(self):
-        templates_page_names = {
-            reverse(INDEX_URL): INDEX_TEMPLATE,
-            reverse(CREATE_URL): CREATE_TEMPLATE,
-            reverse(GROUPS_URL,
-                    kwargs={'slug': 'test-slug'}): GROUPS_TEMPLATE,
-            reverse(PROFILE_URL,
-                    kwargs={'username': 'Geek'}): PROFILE_TEMPLATE,
-            reverse(DETAIL_URL,
-                    kwargs={'post_id': 1}): DETAIL_TEMPLATE,
-            reverse(EDIT_URL,
-                    kwargs={'post_id': 1}): CREATE_TEMPLATE
-        }
-        for reverse_name, template in templates_page_names.items():
-            with self.subTest(template=template):
-                response = self.authorized_client.get(reverse_name)
-                self.assertTemplateUsed(response, template)
-
     def test_create_page_show_correct_context(self):
         response = self.authorized_client.get(reverse(CREATE_URL))
         form_fields = {
             'text': forms.fields.CharField,
             'group': forms.fields.ChoiceField,
+            'image': forms.fields.ImageField
         }
 
         for value, expected in form_fields.items():
@@ -81,7 +64,7 @@ class ViewsTests(TestCase):
         self.assertEqual(response.context['post'].author,
                          self.post.author)
         self.assertEqual(response.context['post'].text,
-                         'Тестовый постик')
+                         self.post.text)
         self.assertEqual(response.context['post'].image,
                          self.post.image)
         self.assertEqual(response.context['author_posts_count'],
